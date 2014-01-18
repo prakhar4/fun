@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# please convert this to .sh format and run as Usage below :)
+##########################
+#
+# THIS IS TO DOWNLOAD THE FILES OF FRONTLINE MAGZINE AT ONCE
+# 
+# NAVIGATE TO <http://www.frontlineonnet.com/archives.htm> AND CHOOSE YOUR EDITION
+# CLICK ON THE MAGAZINE EDITION TO REACH ITS PAGE
+# COPY THE - html SOURCE CODE FOR THAT PAGE -> RIGHT CLICK -> VIEW PAGE SOURCE
+# PASTE THE SOURCE CODE INTO A NORMAL FILE AND SAVE IT
+#
+#	RUN THIS SCRIPT BY PASSING THE NAME OF SOURCE CODE FILE IN TERMINAL.
+# 
+# USAGE:
+#	sh frontlineDLD.sh page_source_filename
+#
+#	author: prakhar
+##########################
+
+grep '<TITLE>' $1
+volno=`grep '<TITLE>' $1 | sed "s/<TITLE>[a-zA-Z :]*Vol. \(..\)....No. \(..\)<\/TITLE>/\1\2/"`
+
+grep stories $1 > _tem1_
+cut -d '"' -f 2 _tem1_ > _tem2_
+
+sed "s/^/http:\/\/www.frontlineonnet.com\/fl$volno\//" _tem2_  > _tem3_
+
+mkdir fl$volno
+cd fl$volno
+
+
+wget -i ../_tem3_
+cd ..
+echo "Downloaded the files! to folder fl$volno"
+
+rm _tem1_ _tem2_ _tem3_
